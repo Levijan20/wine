@@ -60,9 +60,9 @@ pip install -r requirements.txt
    ```
 
 3. **Откройте в браузере**:
-   ```
+
    http://localhost:8000
-   ```
+
 
 ### Структура проекта
 
