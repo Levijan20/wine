@@ -92,45 +92,38 @@ def print_category_stats(catalog):
         print(f"     - {category}: {len(wines)}")
 
 
-def show_report(catalog, years, year_word, config):
+def show_report(catalog, years, year_word, excel_filepath, template_filepath, output_filepath):
     print(f"\n📊 Отчет:")
     print(f"   • Винодельне: {years} {year_word}")
-    print(f"   • Файл: {config['excel_filepath']}")
-    print(f"   • Шаблон: {config['template_filepath']}")
-    print(f"   • Результат: {config['output_filepath']}")
+    print(f"   • Файл: {excel_filepath}")
+    print(f"   • Шаблон: {template_filepath}")
+    print(f"   • Результат: {output_filepath}")
     print("   • Вина по категориям:")
     print_category_stats(catalog)
     print(f"   • Всего: {count_wines(catalog)}")
 
 
 def main():
-    load_dotenv()  # Загрузка переменных окружения внутри main
+    load_dotenv()
 
     parser = create_parser()
     args = parser.parse_args()
 
     current_year = datetime.now().year
-
+    foundation_year = args.foundation_year
     excel_filepath = args.excel_file
     template_filepath = args.template
     output_filepath = args.output
 
-    config = {
-        'excel_filepath': excel_filepath,
-        'template_filepath': template_filepath,
-        'output_filepath': output_filepath,
-        'foundation_year': args.foundation_year,
-        'current_year': current_year
-    }
-
-    print("🚀 Запуск генератора сайта")
-    print(f"⚙️  Конфигурация: {config}")
-
-    years = calculate_winery_age(config['foundation_year'], config['current_year'])
+    years = calculate_winery_age(foundation_year, current_year)
     year_word = get_year_word(years)
 
+    print("🚀 Запуск генератора сайта")
+    print(f"⚙️  Конфигурация: {{'excel': '{excel_filepath}', 'template': '{template_filepath}', "
+          f"'output': '{output_filepath}', 'foundation_year': {foundation_year}, 'current_year': {current_year}}}")
+
     try:
-        catalog_df = read_excel_file(config['excel_filepath'])
+        catalog_df = read_excel_file(excel_filepath)
         validate_catalog_columns(catalog_df)
         catalog = group_by_category(catalog_df)
         print("✅ Каталог вин загружен и сгруппирован")
@@ -148,13 +141,7 @@ def main():
         return
 
     try:
-        render_catalog_page(
-            catalog,
-            years,
-            year_word,
-            config['template_filepath'],
-            config['output_filepath']
-        )
+        render_catalog_page(catalog, years, year_word, template_filepath, output_filepath)
         print("✅ HTML-страница успешно сгенерирована")
     except TemplateNotFound as e:
         print(f"❌ Шаблон не найден: {e}")
@@ -163,7 +150,7 @@ def main():
         print(f"❌ Ошибка ввода-вывода при записи результата: {e}")
         return
 
-    show_report(catalog, years, year_word, config)
+    show_report(catalog, years, year_word, excel_filepath, template_filepath, output_filepath)
 
 
 if __name__ == "__main__":
