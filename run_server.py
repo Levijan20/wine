@@ -7,24 +7,17 @@ from pathlib import Path
 from dotenv import load_dotenv
 from datetime import datetime
 
-load_dotenv()
-
-FOUNDATION_YEAR = int(os.getenv('WINE_FOUNDATION_YEAR', '1920'))
-DEFAULT_EXCEL_FILEPATH = os.getenv('WINE_EXCEL_FILE', 'wine_price_list.xlsx')
-DEFAULT_TEMPLATE_FILEPATH = os.getenv('WINE_TEMPLATE_FILE', 'template.html')
-DEFAULT_OUTPUT_FILEPATH = os.getenv('WINE_OUTPUT_FILE', 'index.html')
-
 
 def create_parser():
     parser = argparse.ArgumentParser(description='Генератор сайта винного магазина')
-    parser.add_argument('--excel-file', default=DEFAULT_EXCEL_FILEPATH,
-                       help=f'Путь к Excel файлу (по умолчанию: {DEFAULT_EXCEL_FILEPATH})')
-    parser.add_argument('--template', default=DEFAULT_TEMPLATE_FILEPATH,
-                       help=f'Путь к HTML шаблону (по умолчанию: {DEFAULT_TEMPLATE_FILEPATH})')
-    parser.add_argument('--output', default=DEFAULT_OUTPUT_FILEPATH,
-                       help=f'Путь для сохранения HTML (по умолчанию: {DEFAULT_OUTPUT_FILEPATH})')
-    parser.add_argument('--foundation-year', type=int, default=FOUNDATION_YEAR,
-                       help=f'Год основания винодельни (по умолчанию: {FOUNDATION_YEAR})')
+    parser.add_argument('--excel-file', default=os.getenv('WINE_EXCEL_FILE', 'wine_price_list.xlsx'),
+                       help=f'Путь к Excel файлу (по умолчанию: {os.getenv("WINE_EXCEL_FILE", "wine_price_list.xlsx")})')
+    parser.add_argument('--template', default=os.getenv('WINE_TEMPLATE_FILE', 'template.html'),
+                       help=f'Путь к HTML шаблону (по умолчанию: {os.getenv("WINE_TEMPLATE_FILE", "template.html")})')
+    parser.add_argument('--output', default=os.getenv('WINE_OUTPUT_FILE', 'index.html'),
+                       help=f'Путь для сохранения HTML (по умолчанию: {os.getenv("WINE_OUTPUT_FILE", "index.html")})')
+    parser.add_argument('--foundation-year', type=int, default=int(os.getenv('WINE_FOUNDATION_YEAR', '1920')),
+                       help='Год основания винодельни (по умолчанию: 1920)')
     return parser
 
 
@@ -111,6 +104,8 @@ def show_report(catalog, years, year_word, config):
 
 
 def main():
+    load_dotenv()  # Загрузка переменных окружения внутри main
+
     parser = create_parser()
     args = parser.parse_args()
 
@@ -134,7 +129,6 @@ def main():
     years = calculate_winery_age(config['foundation_year'], config['current_year'])
     year_word = get_year_word(years)
 
-   
     try:
         catalog_df = read_excel_file(config['excel_filepath'])
         validate_catalog_columns(catalog_df)
