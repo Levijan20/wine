@@ -1,7 +1,6 @@
 import pandas as pd
 from jinja2 import Environment, FileSystemLoader, TemplateNotFound
 from collections import defaultdict
-from pathlib import Path
 from dotenv import load_dotenv
 from datetime import datetime
 import argparse
