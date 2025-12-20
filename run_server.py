@@ -30,9 +30,7 @@ def main():
     args = parser.parse_args()
 
     current_year = datetime.now().year
-    years = current_year - args.foundation_year
-    year_word = get_year_word(years)
-
+    
     print("🚀 Запуск генератора сайта")
     print(f"⚙️  Конфигурация: {{'excel': '{args.excel_file}', 'template': '{args.template}', "
           f"'output': '{args.output}', 'foundation_year': {args.foundation_year}, 'current_year': {current_year}}}")
@@ -68,6 +66,10 @@ def main():
             'promotion': row.get('Акция', '')
         })
     print("✅ Каталог вин загружен и сгруппирован")
+
+    # Переменные объявлены ближе к месту использования
+    years = current_year - args.foundation_year
+    year_word = get_year_word(years)
 
     try:
         env = Environment(loader=FileSystemLoader('.'))
