@@ -1,4 +1,3 @@
----
 # Новое Русское Вино
 
 Веб-сайт магазина авторского вина "Новое русское вино" — простая и удобная витрина для демонстрации каталога вин с возможностью отображения акционных предложений и отзывов клиентов.
@@ -41,6 +40,7 @@
 ### Требования
 
 - Python 3.7 или выше
+- Зависимости: pandas, openpyxl, Jinja2
 
 ### Установка зависимостей
 
@@ -51,13 +51,14 @@ pip install -r requirements.txt
 ### Запуск сервера
 
 1. Подготовьте файл `wine_price_list.xlsx` по образцу.
-2. Запустите локальный сервер:
+2. Поместите изображения товаров в папку `images/`.
+3. Запустите локальный сервер:
 
 ```bash
-python run_server.py
+python main.py
 ```
 
-3. Откройте в браузере:
+4. Откройте в браузере:
 
 ```
 http://localhost:8000
@@ -69,15 +70,14 @@ http://localhost:8000
 
 ```
 wine-shop/
-├── index.html          # Главная страница сайта (генерируемая)
-├── run_server.py       # Скрипт запуска локального сервера
+├── main.py              # Основной скрипт для генерации сайта
+├── index.html           # Главная страница сайта (генерируемая)
 ├── wine_price_list.xlsx # Excel с каталогом вин
-├── requirements.txt    # Python-зависимости
-├── assets/             # Логотипы и основные изображения
-├── images/             # Изображения каталогных вин
-├── css/                # CSS стили сайта
-├── js/                 # JavaScript файлы
-└── fonts/              # Шрифты и иконки
+├── requirements.txt     # Python-зависимости
+├── assets/              # Логотипы и основные изображения
+├── images/              # Изображения каталогных вин
+├── css/                 # CSS стили сайта
+└── template.html        # HTML-шаблон для генерации страницы
 ```
 
 ***
@@ -93,18 +93,37 @@ wine-shop/
 
 ## Настройка переменных окружения
 
-Перед запуском можно задать дополнительные параметры работы сервера через переменные окружения:
+Перед запуском можно задать дополнительные параметры работы через переменные окружения:
 
 | Переменная             | По умолчанию          | Описание                               |
-|-----------------------|-----------------------|--------------------------------------|
+|-----------------------|-----------------------|----------------------------------------|
 | `WINE_FOUNDATION_YEAR` | `1920`                | Год основания магазина, для вывода в футере |
-| `WINE_EXCEL_FILE`      | `wine_price_list.xlsx` | Путь к файлу Excel с каталогом       |
-| `WINE_TEMPLATE_FILE`   | `template.html`       | Имя HTML-шаблона для генерации       |
-| `WINE_OUTPUT_FILE`     | `index.html`          | Итоговый HTML-файл сайта              |
-| `WINE_CURRENT_YEAR`    | `2023`                | Текущий год для отображения          |
+| `WINE_EXCEL_FILE`      | `wine_price_list.xlsx`| Путь к файлу Excel с каталогом         |
+| `WINE_TEMPLATE_FILE`   | `template.html`       | Имя HTML-шаблона для генерации         |
+| `WINE_OUTPUT_FILE`     | `index.html`          | Итоговый HTML-файл сайта               |
+| `WINE_CURRENT_YEAR`    | `2023`                | Текущий год для отображения            |
 
-### Установка примера в Unix/Linux/macOS:
+### Установка переменных окружения:
 
+**В Windows (CMD):**
+```cmd
+set WINE_FOUNDATION_YEAR=1920
+set WINE_EXCEL_FILE=wine_price_list.xlsx
+set WINE_TEMPLATE_FILE=template.html
+set WINE_OUTPUT_FILE=index.html
+set WINE_CURRENT_YEAR=2025
+```
+
+**В Windows (PowerShell):**
+```powershell
+$env:WINE_FOUNDATION_YEAR="1920"
+$env:WINE_EXCEL_FILE="wine_price_list.xlsx"
+$env:WINE_TEMPLATE_FILE="template.html"
+$env:WINE_OUTPUT_FILE="index.html"
+$env:WINE_CURRENT_YEAR="2025"
+```
+
+**В Unix/Linux/macOS:**
 ```bash
 export WINE_FOUNDATION_YEAR=1920
 export WINE_EXCEL_FILE=wine_price_list.xlsx
@@ -120,6 +139,19 @@ export WINE_CURRENT_YEAR=2025
 Для изменения дизайна редактируйте:
 
 - `css/` — стили сайта
-- `js/` — JavaScript
 - `images/` — изображения вин
 - `template.html` — HTML-шаблон для страницы
+
+Для изменения структуры данных редактируйте скрипт `main.py` и Excel-файл `wine_price_list.xlsx`.
+
+***
+
+## Тестирование
+
+После внесения изменений проверьте корректность генерации сайта:
+
+1. Удалите сгенерированный `index.html`
+2. Запустите скрипт: `python main.py`
+3. Убедитесь, что файл `index.html` создан и содержит актуальные данные
+4. Откройте файл в браузере для проверки отображения
+
