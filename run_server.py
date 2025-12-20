@@ -10,7 +10,14 @@ import os
 def get_year_word(n: int) -> str:
     if 11 <= n % 100 <= 14:
         return "лет"
-    return ["год", "года", "лет"][(n % 10) // 2 if 2 <= n % 10 <= 4 else min(n % 10, 2)]
+    
+    last_digit = n % 10
+    if last_digit == 1:
+        return "год"
+    elif 2 <= last_digit <= 4:
+        return "года"
+    else:
+        return "лет"
 
 
 def main():
